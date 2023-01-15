@@ -37,11 +37,7 @@ class RandomAgent(Agent):
 
   def next_action(self, percepts):
     print("perceiving: " + str(percepts))
-    if percepts == ['DIRT']:
-      action = "SUCK"
-      print("selected action: " + action)
-      return action
-    actions = ["TURN_ON", "TURN_OF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK"]
+    actions = ["TURN_ON", "TURN_OFF", "TURN_RIGHT", "TURN_LEFT", "GO", "SUCK"]
     action = random.choice(actions)
     print("selected action: " + action)
     return action
