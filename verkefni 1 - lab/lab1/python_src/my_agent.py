@@ -44,6 +44,10 @@ class MyAgent(Agent):
         self.visited = {self.home}
 
         self.bump_counter = 0
+        self.max_y = None
+        self.max_x = None
+        self.min_x = None
+        self.min_y = None
 
 
 
@@ -91,9 +95,20 @@ class MyAgent(Agent):
         if "BUMP" in percepts :
             self.undo_move()
             self.bump_counter += 1
-            if self.bump_counter <= 4:
-                return self.turn_right()
-            elif self.bump_counter > 4:
-               return self.turn_right()
-
+            if self.bump_counter == 1:
+                self.max_y = self.position
+                self.turn_right()
+            elif self.bump_counter == 2:
+                self.max_x = self.position
+                self.turn_right()
+            elif self.bump_counter == 3:
+                self.min_y = self.position
+                self.turn_right()
+            elif self.bump_counter == 4:
+                self.min_x = self.position
+                self.turn_right()
+                self.go()
+                self.turn_right()
+            else:
+                pass
         return self.go()
