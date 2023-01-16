@@ -41,13 +41,12 @@ class MyAgent(Agent):
 
     def __init__(self):
         self.position = Point()
-        self.home = Point()
+        self.home = deepcopy(Point())
         self.orientation = Orientation.NORTH
         self.turned_on = False
         self.ET_go_home = False
 
         self.visited = {self.home}
-        self.ignore = {self.home}
 
         self.turn_bool = False
         self.turn_count = 0
@@ -71,9 +70,9 @@ class MyAgent(Agent):
         self.home = Point()
         self.orientation = Orientation.NORTH
         self.turned_on = False
+        self.ET_go_home = False
 
         self.visited = {self.home}
-        self.ignore = {self.home}
 
         self.turn_bool = False
         self.turn_count = 0
@@ -84,6 +83,7 @@ class MyAgent(Agent):
         self.min_y = None
         self.size = 1000000
         self.turn_occurances = 0
+
 
     def turn_on(self):
         self.turned_on = True
@@ -112,6 +112,7 @@ class MyAgent(Agent):
     def next_action(self, percepts):
 
         print(f"Percepts: {percepts}")
+
         if not self.turned_on:
             return self.turn_on()
         if "DIRT" in percepts:
@@ -119,22 +120,35 @@ class MyAgent(Agent):
 
         if self.ET_go_home:
             if self.position.x == self.home.x and self.position.y == self.home.y:
-                self.cleanup()
+                self.cleanup(percepts)
+                return self.turn_off()
             elif self.position.x <= self.home.x:
-                self.orientation = Orientation.EAST
+                if self.orientation != Orientation.EAST:
+                    return self.turn_right()
             elif self.position.x >= self.home.x:
-                self.orientation = Orientation.WEST
+                if self.orientation != Orientation.WEST:
+                    return self.turn_right()
             elif self.position.x == self.home.x and self.position.y <= self.home.y:
-                self.orientation = Orientation.NORTH
+                if self.orientation != Orientation.NORTH:
+                    return self.turn_right()
             elif self.position.x == self.home.x and self.position.y >= self.home.y:
-                self.orientation = Orientation.SOUTH
+                if self.orientation != Orientation.SOUTH:
+                    return self.turn_right()
             return self.go()
-        if self.turn_occurances == self.size:
+
+        if self.turn_occurances == self.size+1:
             self.turn_bool = False
             self.ET_go_home = True
 
+            if ("BUMP" in percepts):
+                # or self.position in self.visited
+                # and not (self.position in self.ignore)
+                self.undo_move()
+            return self.go()
+
         if self.turn_bool and self.turn_count < 3:
             self.turn_count += 1
+
             if self.turn_direction == "right" and self.turn_count == 1:
                 return self.turn_right()
             elif self.turn_direction == "right" and self.turn_count == 2:
@@ -143,6 +157,7 @@ class MyAgent(Agent):
                 self.turn_direction = "left"
                 self.turn_occurances += 1
                 return self.turn_right()
+
             if self.turn_direction == "left" and self.turn_count == 1:
                 return self.turn_left()
             elif self.turn_direction == "left" and self.turn_count == 2:
@@ -151,12 +166,10 @@ class MyAgent(Agent):
                 self.turn_direction = "right"
                 self.turn_occurances += 1
                 return self.turn_left()
-        else :
+        elif self.turn_count >= 3:
             self.turn_count = 0
             self.turn_bool = False
-
-        if self.bump_counter == 0:
-            self.ignore.add(self.position)
+            return self.go()
 
         if ("BUMP" in percepts ) :
             # or self.position in self.visited
