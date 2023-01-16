@@ -133,16 +133,17 @@ class MyAgent(Agent):
                 if self.position.x == self.home.x and self.position.y == self.home.y and self.ET_go_home:
                     self.cleanup(percepts)
                     return self.turn_off()
-                self.turn_bool = True
+                if not self.ET_go_home:
+                    self.turn_bool = True
 
         if self.ET_go_home:
             if self.position.x == self.home.x and self.position.y == self.home.y:
                 self.cleanup(percepts)
                 return self.turn_off()
-            elif self.position.x == self.home.x and self.position.y <= self.home.y:
+            elif self.position.x == self.home.x and self.position.y < self.home.y:
                 if self.orientation != Orientation.NORTH:
                     return self.turn_right()
-            elif self.position.x == self.home.x and self.position.y >= self.home.y:
+            elif self.position.x == self.home.x and self.position.y > self.home.y:
                 if self.orientation != Orientation.SOUTH:
                     return self.turn_right()
             elif self.position.x < self.home.x:
@@ -160,6 +161,7 @@ class MyAgent(Agent):
 
         if self.turn_bool and self.turn_count < 3:
             self.turn_count += 1
+
             if self.turn_direction == "right" and self.turn_count == 1:
                 return self.turn_right()
             elif self.turn_direction == "right" and self.turn_count == 2:
@@ -168,6 +170,7 @@ class MyAgent(Agent):
                 self.turn_direction = "left"
                 self.turn_occurances += 1
                 return self.turn_right()
+
             if self.turn_direction == "left" and self.turn_count == 1:
                 return self.turn_left()
             elif self.turn_direction == "left" and self.turn_count == 2:
@@ -176,8 +179,8 @@ class MyAgent(Agent):
                 self.turn_direction = "right"
                 self.turn_occurances += 1
                 return self.turn_left()
+
         elif self.turn_count >= 3:
             self.turn_count = 0
             self.turn_bool = False
-
         return self.go()
