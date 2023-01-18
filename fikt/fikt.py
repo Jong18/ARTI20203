@@ -1,5 +1,7 @@
 import openai
-openai.api_key = "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"
+f = open("C:\\Users\\Ingolfur\\Documents\\myopenai_key.txt", "r")
+lykill = f.readline()
+openai.api_key = lykill
 engines = openai.Engine.list()
 
 response = openai.Image.create(
