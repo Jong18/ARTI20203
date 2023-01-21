@@ -26,7 +26,8 @@ def bfs_traverse(env, expected_nb_states):
       return visited.keys()
     state = open_list.pop()
     if not env.is_goal_state(state):
-      for next_state in [env.get_next_state(state, a) for a in env.get_legal_actions(state)]:
+      stateparser = [env.get_next_state(state, a) for a in env.get_legal_actions(state)]
+      for next_state in stateparser:
         if next_state not in visited:
           visited[next_state] = 1
           open_list.append(next_state)
