@@ -97,6 +97,7 @@ def main(argv):
   env = Environment(width,height,nb_dirts)
   states = bfs_traverse(env, expected_nb_states)
   end_time = time.process_time_ns()
+  timediff = end_time - start_time
   if expected_nb_states < len(states): # not all states were generated
     return
   goal_states = list(filter(lambda x: env.is_goal_state(x), states))
@@ -106,7 +107,10 @@ def main(argv):
     print("Your estimate is off by a factor of %.2f (Why?)" % factor_off) 
   else:
     print("Your estimate was exactly right!")
-  print("Generating those states took: %.2fs (%.0f states/s)" % ((end_time-start_time)/10**9, 10**9*len(states)/(end_time-start_time)))
+  glomma = 10**9
+  if timediff == 0:
+    timediff = 1
+  print("Generating those states took: %.2fs (%.0f states/s)" % (timediff/glomma, (glomma*len(states))/timediff))
 
   # estimate size of states in memory
   size_of_all_states = pysize.get_size(states)
