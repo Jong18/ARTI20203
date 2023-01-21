@@ -63,7 +63,6 @@ class Environment:
     self.home = random.choice(all_positions)
     # randomly choose locations for dirt
     self.dirts = random.sample(all_positions, nb_dirts)
-    return
 
   def get_initial_state(self):
     # TODO: return the initial state of the environment
@@ -75,9 +74,9 @@ class Environment:
     if not state.turned_on:
       actions.append("TURN_ON")
     else:
-      if True: # should be only possible when agent has returned home
+      if state.position == self.home: # should be only possible when agent has returned home
         actions.append("TURN_OFF")
-      if True: # should be only possible if there is dirt in the current position
+      if state.position in self.dirts: # should be only possible if there is dirt in the current position
         actions.append("SUCK")
       if True: # should be only possible when next position is inside the grid (avoid bumping in walls)
         actions.append("GO")
@@ -91,10 +90,10 @@ class Environment:
       return State(True)
     elif action == "TURN_OFF":
       return State(False)
-    elif action == "TURN_LEFT":
-      return State(state.turned_on, state.position, state.dirts_left, state.orientation - 1)
-    elif action == "TURN RIGHT":
-      return State(state.turned_on, state.position, state.dirts_left, state.orientation + 1)
+    elif  action == "TURN_LEFT":
+      return State(state.turned_on, state.position, state.dirts_left,state.orientation - 1)
+    elif  action == "TURN_RIGHT":
+      return State(state.turned_on, state.position, state.dirts_left,state.orientation + 1)
     else:
       raise Exception("Unknown action %s" % str(action))
 
