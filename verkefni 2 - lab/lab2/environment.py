@@ -91,6 +91,10 @@ class Environment:
       return State(True)
     elif action == "TURN_OFF":
       return State(False)
+    elif action == "TURN_LEFT":
+      return State(state.turned_on, state.position, state.dirts_left, state.orientation - 1)
+    elif action == "TURN RIGHT":
+      return State(state.turned_on, state.position, state.dirts_left, state.orientation + 1)
     else:
       raise Exception("Unknown action %s" % str(action))
 
