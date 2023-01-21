@@ -78,7 +78,18 @@ class Environment:
         actions.append("TURN_OFF")
       if state.position in self.dirts: # should be only possible if there is dirt in the current position
         actions.append("SUCK")
-      if True: # should be only possible when next position is inside the grid (avoid bumping in walls)
+
+      nextposition = list(state.position)
+      if state.orientation == Orientation.NORTH:
+        nextposition[1] += 1
+      elif state.orientation == Orientation.SOUTH:
+        nextposition[1] -= 1
+      elif state.orientation == Orientation.EAST:
+        nextposition[0] += 1
+      elif state.orientation == Orientation.WEST:
+        nextposition[0] -= 1
+      nextposition = tuple(nextposition)
+      if nextposition in self.all_positions:
         actions.append("GO")
       actions.append("TURN_LEFT")
       actions.append("TURN_RIGHT")
@@ -95,7 +106,6 @@ class Environment:
     elif  action == "TURN_RIGHT":
       return State(state.turned_on, state.position, state.dirts_left,state.orientation + 1)
     elif action == "GO":
-
       nextposition = list(state.position)
       if state.orientation == Orientation.NORTH:
         nextposition[1] += 1
@@ -106,18 +116,23 @@ class Environment:
       elif state.orientation == Orientation.WEST:
         nextposition[0] -= 1
       nextposition = tuple(nextposition)
-      if nextposition in self.all_positions:
-        return State(state.turned_on, nextposition, state.dirts_left, state.orientation)
-      else:
-        print("YOU CAN NOT GO FORWARD WITH THIS ORIENTATION")
-        return State(state.turned_on, state.position, state.dirts_left, state.orientation)
+      return State(state.turned_on, nextposition, state.dirts_left, state.orientation)
     elif action == "SUCK":
       try:
+
         dirtlist = list(state.dirts_left)
+        print("dirtlisti:" + str(dirtlist))
+        print("position nuna:" + str(state.position))
         dirtlist.pop(dirtlist.index(state.position))
         dirttuple = tuple(dirtlist)
       except ValueError:
+        print()
+        print("----------------------------------------------------")
         print("THERE WAS NO DIRT WHEN TRYING TO SUCK")
+        print("dirtlisti:" + str(dirtlist))
+        print("position nuna:" + str(state.position))
+        print("----------------------------------------------------")
+        print()
         dirttuple = state.dirts_left
       return State(state.turned_on, state.position, dirttuple, state.orientation + 1)
 
