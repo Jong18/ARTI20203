@@ -11,3 +11,8 @@ response = openai.Image.create(
 )
 image_url = response['data'][0]['url']
 print(response)
+
+sets = {12}
+asdf = [{"mis","can","can"},{"can"},{"mis","mis"},"right"]
+asd = [{"can","mis","can"},{"can"},{"mis","mis"},"left"]
+print(sets)
