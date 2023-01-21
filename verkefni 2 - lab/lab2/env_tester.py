@@ -116,6 +116,7 @@ def main(argv):
   size_of_all_states = pysize.get_size(states)
   size_of_initial_state = pysize.get_size(env.get_initial_state())
   size_of_environment = pysize.get_size(env)
+
   print()
   print("size of environment: %d bytes" % size_of_environment)
   print("size of initial state: %d bytes" % size_of_initial_state)
