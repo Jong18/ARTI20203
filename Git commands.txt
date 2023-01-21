@@ -1,0 +1,62 @@
+Git commands
+
+Adding changes to your own remote branch on GitLab (you are currently situated in your local branch NOT MAIN)
+
+Add all files to the staging area
+$ git add .
+
+Or add a file to the staging area
+$ git add [filename]
+or
+$ git add filepath
+
+Create a new commit from changes added to the staging area
+$ git commit -m "commit msg here"
+
+Push the changes to your remote branch
+$ git push origin your_branch
+
+Switch from your local branch to the local main branch. This is to make sure that your branch (both local and remote) is up to date with the main branch. DO THIS REGULARLY
+$ git checkout main
+
+Fetch changes from the remote main and merge into the local main branch
+$ git pull origin main
+
+Switch to your branch
+$ git checkout your_branch
+
+Merge the changes that you pulled into the main branch into your branch
+$ git merge main
+
+Push the merge changes into your remote branch
+$ git push origin your_branch
+
+Merging your branch into the remote main branch (ONLY DO THIS IF YOU PLAN ON PUSHING TO MAIN)
+DO THIS ON GITLAB WITH MERGE REQUEST! and ALWAYS MAKE SURE THAT YOUR BRANCH IS UP TO DATE WITH THE MAIN BRANCH!!!
+
+Other important commands
+
+Check changes. Try to make this a habit
+$ git status
+
+Delete selected branch
+
+Delete the remote branch first
+$ git push origin --delete artistData
+
+Then, change your current working branch to main (or any other branch)
+$ git checkout main
+
+Delete the local branch
+$ git branch -d your_branch
+Now you can create a new branch if you wish.
+
+Creating a new branch
+
+First create a new local branch. Git creates a branch with the specified branch name and switches from current branch to the new branch
+$ git checkout -b your_branch
+
+Next create a remote branch that communicates with the new local branch.Git pushes and creates a remote as a upstream to the new, current, branch
+$ git push -u origin your_branch
+
+Merge conflicts
