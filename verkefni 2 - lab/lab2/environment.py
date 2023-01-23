@@ -1,3 +1,4 @@
+import math
 from enum import IntEnum
 import random
 import itertools
@@ -76,7 +77,7 @@ class Environment:
     else:
       if state.position == self.home: # should be only possible when agent has returned home
         actions.append("TURN_OFF")
-      if state.position in self.dirts: # should be only possible if there is dirt in the current position
+      if state.position in state.dirts_left: # should be only possible if there is dirt in the current position
         actions.append("SUCK")
 
       nextposition = list(state.position)
@@ -160,4 +161,17 @@ class Environment:
 ##############
 
 def expected_number_of_states(width, height, nb_dirts):
-  return ((width-2)*(height-2)*4 + 2*(width-1)*3 + 2*(height-1)*3 )*2*10000
+  # state_basic is the position the agent can be positioned in on the grid, multiplied by the possible orientations,
+  # multplied with the on or off possibility.
+  orientiations = 4
+  onoroff = 2
+  state_basic = width*height*orientiations*onoroff
+
+  # this takes into account all the possible different setups the dirts can randomly be placed on our grid structure
+  combinatorics = math.factorial(width*height)/(math.factorial(nb_dirts)*math.factorial(width*height-nb_dirts))
+
+  ive_over_complicated_this = True
+  if ive_over_complicated_this:
+    # states depending on how many dirts are left
+    combinatorics = math.factorial(nb_dirts)
+  return state_basic*combinatorics
